@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Sdk-core-php by YOTOV-LIMITED</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Sdk-core-php</h1>
+      <h2 class="project-tagline">for classic PHP SDKs.</h2>
+      <a href="https://github.com/YOTOV-LIMITED/sdk-core-php" class="btn">View on GitHub</a>
+      <a href="https://github.com/YOTOV-LIMITED/sdk-core-php/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/YOTOV-LIMITED/sdk-core-php/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h3>
+<a id="paypal-core-sdk" class="anchor" href="#paypal-core-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PayPal Core SDK</h3>
+
+<h2>
+<a id="please-note" class="anchor" href="#please-note" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Please Note</h2>
+
+<blockquote>
+<p><strong>The Payment Card Industry (PCI) Council has <a href="http://blog.pcisecuritystandards.org/migrating-from-ssl-and-early-tls">mandated</a> that early versions of TLS be retired from service.  All organizations that handle credit card information are required to comply with this standard. As part of this obligation, PayPal is updating its services to require TLS 1.2 for all HTTPS connections. At this time, PayPal will also require HTTP/1.1 for all connections. <a href="https://github.com/paypal/tls-update">Click here</a> for more information</strong></p>
+
+<p>A new <code>mode</code> has been created to test if your server/machine handles TLSv1.2 connections. Please use <code>tls</code> mode instead of <code>sandbox</code> to verify. You can return back to <code>sandbox</code> mode once you have verified.</p>
+</blockquote>
+
+<h4>
+<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prerequisites</h4>
+
+<ul>
+<li>PHP 5.3 and above</li>
+<li>curl extension with support for OpenSSL</li>
+<li>PHPUnit 3.5 for running test suite (Optional)</li>
+<li>Composer</li>
+</ul>
+
+<h4>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h4>
+
+<h4>
+<a id="openid-connect-integration" class="anchor" href="#openid-connect-integration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OpenID Connect Integration</h4>
+
+<ol>
+<li>Redirect your buyer to <code>PPOpenIdSession::getAuthorizationUrl($redirectUri, array('openid', 'address'));</code> to obtain authorization. The second argument is the list of access privileges that you want from the buyer.</li>
+<li>Capture the authorization code that is available as a query parameter (<code>code</code>) in the redirect url</li>
+<li>Exchange the authorization code for a access token, refresh token, id token combo</li>
+</ol>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">    <span class="pl-smi">$token</span> <span class="pl-k">=</span> <span class="pl-c1">PPOpenIdTokeninfo</span><span class="pl-k">::</span>createFromAuthorizationCode(</span>
+<span class="pl-s1">        <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>code<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$authCode</span></span>
+<span class="pl-s1">        )</span>
+<span class="pl-s1">    );</span></pre></div>
+
+<ol>
+<li>The access token is valid for a predefined duration and can be used for seamless XO or for retrieving user information</li>
+</ol>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">   <span class="pl-smi">$user</span> <span class="pl-k">=</span> <span class="pl-c1">PPOpenIdUserinfo</span><span class="pl-k">::</span>getUserinfo(</span>
+<span class="pl-s1">        <span class="pl-c1">array</span>(</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>access_token<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$token</span><span class="pl-k">-&gt;</span>getAccessToken()</span>
+<span class="pl-s1">        )   </span>
+<span class="pl-s1">    );</span></pre></div>
+
+<ol>
+<li>If the access token has expired, you can obtain a new access token using the refresh token from the 3'rd step.</li>
+</ol>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1">   <span class="pl-smi">$token</span><span class="pl-k">-&gt;</span>createFromRefreshToken(<span class="pl-c1">array</span>(<span class="pl-s"><span class="pl-pds">'</span>openid<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>address<span class="pl-pds">'</span></span>));</span></pre></div>
+
+<ol>
+<li>Redirect your buyer to <code>PPOpenIdSession::getLogoutUrl($redirectUri, $idToken);</code> to log him out of paypal. </li>
+</ol>
+
+<h4>
+<a id="license-and-contributions" class="anchor" href="#license-and-contributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LICENSE and CONTRIBUTIONS</h4>
+
+<ul>
+<li>Please read <a href="LICENSE">LICENSE</a> and <a href="CONTRIBUTING.md">CONTRIBUTING</a> for more information.</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/YOTOV-LIMITED/sdk-core-php">Sdk-core-php</a> is maintained by <a href="https://github.com/YOTOV-LIMITED">YOTOV-LIMITED</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
